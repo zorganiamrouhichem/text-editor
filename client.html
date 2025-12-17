@@ -6,7 +6,7 @@
 
 <style>
 /* ================= THEME VARIABLES ================= */
-html[data-theme="dark"] {
+:root {
   --bg: #0f111a;
   --panel: #151926;
   --panel-2: #1c2032;
@@ -42,15 +42,14 @@ body {
   overflow: hidden;
 }
 
-/* ================= JOIN & FILE PICKER SCREEN ================= */
-#joinBox,
-#filePicker {
+/* ================= JOIN & FILE PICKER ================= */
+#joinBox, #filePicker {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, var(--bg), var(--panel));
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(135deg, var(--bg), var(--panel));
 }
 
 .join-card {
@@ -70,25 +69,39 @@ body {
   margin: 0 0 20px;
   color: var(--muted);
 }
+/* Theme toggle always on top-right */
+#themeBtnTop {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 99999; /* ensure it's on top of joinBox and filePicker */
+}
+
 
 .join-card input {
   width: 100%;
   padding: 14px;
+  margin-bottom: 12px;
   background: var(--editor);
   border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--text);
-  margin-bottom: 12px;
 }
 
 .join-card button {
-  margin-top: 16px;
   width: 100%;
   padding: 14px;
+  margin-top: 16px;
   background: var(--accent);
   border: none;
   border-radius: 10px;
-  color: white;
+  color: #fff;
   font-weight: 600;
   cursor: pointer;
 }
@@ -110,12 +123,8 @@ body {
   padding: 0 16px;
 }
 
-.logo {
-  font-weight: 700;
-  color: var(--accent);
-}
+.logo { font-weight: 700; color: var(--accent); }
 
-/* THEME BUTTON */
 .theme-toggle {
   background: var(--panel-2);
   border: 1px solid var(--border);
@@ -125,7 +134,7 @@ body {
   font-size: 16px;
 }
 
-/* ================= MAIN ================= */
+/* ================= MAIN LAYOUT ================= */
 .main {
   display: flex;
   height: calc(100% - 48px - 28px);
@@ -133,53 +142,99 @@ body {
 
 .sidebar {
   width: 220px;
+  flex-shrink: 0;
   background: var(--panel);
   border-right: 1px solid var(--border);
   padding: 12px;
-}
-
-.sidebar h3 {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-#usersList {
-  list-style: none;
-  padding: 0;
-}
-
-#usersList li {
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: var(--panel-2);
-  margin-bottom: 6px;
-  font-size: 13px;
 }
 
 .editor-area {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .tabs {
-  height: 36px;
-  background: var(--panel-2);
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  background: var(--panel-2);
+  padding: 0 12px;
+  gap: 8px;
+  height: 40px;
+  border-bottom: 1px solid var(--border);
 }
 
-.tab {
+.tabs .tab, #backToFiles {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.tabs .tab {
   background: var(--editor);
   border: 1px solid var(--border);
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 13px;
+  color: var(--text);
+  flex-shrink: 0;
 }
 
-textarea {
+.tabs .tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+#backToFiles {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+}
+
+#backToFiles:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.editor-controls {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.editor-controls button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  color: #fff;
+}
+
+#startRecording { background: #10b981; }
+#stopRecording { background: #ef4444; }
+#replayMacro { background: #3b82f6; }
+
+.editor-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+textarea#editor {
   flex: 1;
+  width: 100%;
+  min-width: 0;
+  resize: none;
   background: var(--editor);
   border: none;
   outline: none;
@@ -212,47 +267,19 @@ textarea {
   color: var(--muted);
 }
 
-/* ================= FILE LIST ================= */
-#filesList {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 12px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-#filesList li {
-  padding: 6px 10px;
-  background: var(--panel-2);
-  border-radius: 6px;
-  margin-bottom: 6px;
-  cursor: pointer;
-}
-
-/* ================= ACTIVE EDITORS ================= */
-.active-editors {
-  margin-top: 20px;
-}
-
-.active-editors h3 {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-#activeEditorsList {
+/* ================= ACTIVE USERS ================= */
+#usersList, #activeEditorsList, #filesList {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-#activeEditorsList li {
+#usersList li, #activeEditorsList li, #filesList li {
   padding: 6px 10px;
   border-radius: 6px;
   background: var(--panel-2);
   margin-bottom: 6px;
   font-size: 13px;
-  display: flex;
-  align-items: center;
 }
 
 .user-indicator {
@@ -263,33 +290,25 @@ textarea {
   margin-right: 8px;
 }
 
-.user-indicator.online {
-  background: #10b981;
-}
+.user-indicator.online { background: #10b981; }
+.user-indicator.active { background: #f59e0b; }
 
-.user-indicator.active {
-  background: #f59e0b;
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .main { flex-direction: column; height: auto; }
+  .sidebar, .editor-area, .log-panel { width: 100%; }
+  .sidebar { border-right: none; border-bottom: 1px solid var(--border); padding: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .editor-controls, .tabs { flex-wrap: wrap; gap: 6px; }
+  .log-panel { height: 150px; border-left: none; border-top: 1px solid var(--border); margin-top: 8px; }
+  .topbar, .statusbar { flex-direction: column; align-items: flex-start; height: auto; gap: 4px; padding: 6px 12px; }
+  textarea { padding: 12px; font-size: 14px; }
+  .join-card { width: 90%; padding: 24px; }
 }
-#backToFiles {
-  background: var(--panel-2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 4px 10px;
-  margin-right: 8px;
-  cursor: pointer;
-  font-size: 14px;
-}
-#backToFiles:hover {
-  background: var(--accent);
-  color: #fff;
-}
-
-
-/* ... existing HTML ... */
 </style>
 </head>
 
 <body>
+<button class="theme-toggle" id="themeBtnTop">🌙</button>
 
 <!-- JOIN -->
 <div id="joinBox">
@@ -311,40 +330,36 @@ textarea {
   </div>
 </div>
 
-
 <!-- APP -->
 <div id="app">
   <div class="topbar">
-    <div class="logo">⚡ Editor</div>
-    <button class="theme-toggle" id="themeBtn">🌙</button>
+    <div class="logo">Live Editor</div>
   </div>
 
   <div class="main">
-   <aside class="sidebar">
-  <h3>Online Users</h3>
-  <ul id="usersList"></ul>
-  
-  <div class="active-editors">
-    <h3>Active Editors</h3>
-    <ul id="activeEditorsList"></ul>
-  </div>
-</aside>
+    <aside class="sidebar">
+      <h3>Online Users on full editor</h3>
+      <ul id="usersList"></ul>
+      <div class="active-editors">
+        <h3>Active Editors on this file</h3>
+        <ul id="activeEditorsList"></ul>
+      </div>
+    </aside>
 
     <section class="editor-area">
-     <div class="tabs">
-  <button id="backToFiles" style="display:none;">⬅ Back</button>
-  <div class="tab" id="fileTab">No file</div>
-  
-</div>
-<button id="startRecording">⏺ Start Recording</button>
-<button id="stopRecording" disabled>⏹ Stop Recording</button>
-<button id="replayMacro" disabled>▶ Replay Macro</button>
+      <div class="tabs">
+        <button id="backToFiles" style="display:none;">⬅ Back</button>
+        <div class="tab" id="fileTab">No file</div>
+      </div>
 
+      <div class="editor-controls">
+        <button id="startRecording"><span>⏺</span> Start Recording</button>
+        <button id="stopRecording" disabled><span>⏹</span> Stop Recording</button>
+        <button id="replayMacro" disabled><span>▶</span> Replay Macro</button>
+      </div>
 
       <textarea id="editor" disabled spellcheck="false"></textarea>
     </section>
-
-    <aside class="log-panel" id="log"></aside>
   </div>
 
   <div class="statusbar">
@@ -354,230 +369,168 @@ textarea {
 </div>
 
 <script>
-/* ================= THEME TOGGLE ================= */
-const themeBtn = document.getElementById("themeBtn");
-const root = document.documentElement;
-let currentFile = null;
-const fileTab = document.getElementById("fileTab");
-let isRecording = false;
-let recordedActions = [];
+// ================= THEME TOGGLE =================
+document.addEventListener("DOMContentLoaded", () => {
+  const root = document.documentElement;
+  const themeBtnTop = document.getElementById("themeBtnTop");
 
+  function setTheme(theme) {
+    root.setAttribute("data-theme", theme);
+    themeBtnTop.textContent = theme === "dark" ? "🌙" : "☀️";
+    localStorage.setItem("theme", theme);
+  }
+  setTheme(localStorage.getItem("theme") || "light");
+  themeBtnTop.onclick = () => setTheme(root.getAttribute("data-theme")==="dark"?"light":"dark");
 
-function setTheme(theme) {
-  root.setAttribute("data-theme", theme);
-  themeBtn.textContent = theme === "dark" ? "🌙" : "☀️";
-  localStorage.setItem("theme", theme);
-}
+  // ================= ELEMENTS =================
+  const joinBox = document.getElementById("joinBox");
+  const nameInput = document.getElementById("nameInput");
+  const joinBtn = document.getElementById("joinBtn");
+  const app = document.getElementById("app");
+  const filePicker = document.getElementById("filePicker");
+  const filesList = document.getElementById("filesList");
+  const newFile = document.getElementById("newFile");
+  const createFileBtn = document.getElementById("createFileBtn");
+  const editor = document.getElementById("editor");
+  const backBtn = document.getElementById("backToFiles");
+  const fileTab = document.getElementById("fileTab");
+  const statusEl = document.getElementById("status");
+  const usersList = document.getElementById("usersList");
+  const activeEditorsList = document.getElementById("activeEditorsList");
+  const startBtn = document.getElementById("startRecording");
+  const stopBtn = document.getElementById("stopRecording");
+  const replayBtn = document.getElementById("replayMacro");
 
-setTheme(localStorage.getItem("theme") || "dark");
-themeBtn.onclick = () => {
-  setTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
-};
+  let ws, currentFile = null, localDoc = "", isApplyingRemote = false;
+  let isRecording = false, recordedActions = [];
 
-/* ================= EDITOR LOGIC ================= */
-let ws;
-let localDoc = "";
-let isApplyingRemote = false;
+  // ================= JOIN SESSION =================
+  joinBtn.onclick = () => {
+    const name = nameInput.value.trim();
+    if (!name) return alert("Enter your name");
+    ws = new WebSocket(`ws://${location.host}`);
+    ws.onopen = () => {
+      ws.send(JSON.stringify({ type: "join", name }));
+      statusEl.textContent = "Connected";
+      joinBox.style.display = "none";
+    };
+    ws.onmessage = (ev) => {
+      const msg = JSON.parse(ev.data);
 
-const editor = document.getElementById("editor");
-const filePicker = document.getElementById("filePicker");
-const filesList = document.getElementById("filesList");
-const statusEl = document.getElementById("status");
+      // Users
+      if (msg.type==="user-list") {
+        usersList.innerHTML = "";
+        msg.users.forEach(u => {
+          const li = document.createElement("li");
+          li.textContent = u.name + (u.editingFile?` (editing ${u.editingFile})`:"");
+          usersList.appendChild(li);
+        });
+      }
 
-document.getElementById("joinBtn").onclick = () => {
-  const name = nameInput.value.trim();
-  if (!name) return alert("Enter your name");
+      // Active editors
+      if (msg.type==="active-editors") {
+        activeEditorsList.innerHTML = "";
+        msg.editors.forEach(name=>{
+          const li=document.createElement("li");
+          li.textContent=name;
+          li.className="active-editor";
+          activeEditorsList.appendChild(li);
+        });
+      }
 
-ws = new WebSocket(`ws://${location.host}`);
+      // File list
+      if (msg.type==="files") {
+        filesList.innerHTML="";
+        msg.files.forEach(f=>{
+          const li=document.createElement("li");
+          li.textContent=f;
+          li.onclick=()=>{ ws.send(JSON.stringify({type:"open-file",name:f})); filePicker.style.display="none"; };
+          filesList.appendChild(li);
+        });
+        if(!currentFile) filePicker.style.display="flex";
+      }
 
-  ws.onopen = () => {
-    ws.send(JSON.stringify({ type: "join", name }));
-    statusEl.textContent = "Connected";
-    joinBox.style.display = "none";
+      // Open file
+      if(msg.type==="init"){
+        currentFile=msg.file;
+        fileTab.textContent=currentFile;
+        filePicker.style.display="none";
+        app.style.display="block";
+        editor.value=msg.doc;
+        localDoc=msg.doc;
+        editor.disabled=false;
+        backBtn.style.display="inline-block";
+      }
+
+      // Remote updates
+      if(msg.type==="op"){
+        isApplyingRemote=true;
+        if(msg.op==="insert") localDoc = localDoc.slice(0,msg.pos)+msg.char+localDoc.slice(msg.pos);
+        else localDoc = localDoc.slice(0,msg.pos)+localDoc.slice(msg.pos+1);
+        editor.value=localDoc;
+        isApplyingRemote=false;
+      }
+    };
   };
 
-  ws.onmessage = ev => {
-  const msg = JSON.parse(ev.data);
-
-  /* ---------- ONLINE USERS ---------- */
-  if (msg.type === "user-list") {
-    usersList.innerHTML = "";
-    msg.users.forEach(u => {
-      const li = document.createElement("li");
-      li.textContent = u.name + (u.editingFile ? ` (editing ${u.editingFile})` : "");
-      usersList.appendChild(li);
-    });
-  }
-
-  /* ---------- ACTIVE EDITORS ---------- */
-  if (msg.type === "active-editors") {
-    activeEditorsList.innerHTML = "";
-    msg.editors.forEach(name => {
-      const li = document.createElement("li");
-      li.textContent = name;
-      li.className = "active-editor";
-      activeEditorsList.appendChild(li);
-    });
-  }
-
-  /* ---------- FILE LIST ---------- */
-  if (msg.type === "files") {
-    filesList.innerHTML = "";
-    msg.files.forEach(f => {
-      const li = document.createElement("li");
-      li.textContent = f;
-      li.onclick = () => {
-        ws.send(JSON.stringify({ type: "open-file", name: f }));
-        filePicker.style.display = "none";
-      };
-      filesList.appendChild(li);
-    });
-    if (currentFile === null) filePicker.style.display = "flex";
-  }
-
-  /* ---------- FILE OPEN ---------- */
- if (msg.type === "init") {
-  currentFile = msg.file;
-  fileTab.textContent = currentFile;
-  filePicker.style.display = "none";
-  app.style.display = "block";
-
-  editor.value = msg.doc;
-  localDoc = msg.doc;  // <--- ADD THIS LINE
-  editor.disabled = false;
-  backBtn.style.display = "inline-block"; // show the back button
-}
-
-
-
-  /* ---------- REMOTE UPDATE ---------- */
-  if (msg.type === "op") {
-    isApplyingRemote = true;
-    if (msg.op === "insert")
-      localDoc = localDoc.slice(0, msg.pos) + msg.char + localDoc.slice(msg.pos);
-    else
-      localDoc = localDoc.slice(0, msg.pos) + localDoc.slice(msg.pos + 1);
-    editor.value = localDoc;
-    isApplyingRemote = false;
-  }
-};
-
-};
-
-/* ---------- CREATE FILE ---------- */
-createFileBtn.onclick = () => {
-  const name = newFile.value.trim();
-  if (!name) return;
-
-  // Send create request
-  ws.send(JSON.stringify({ type: "create-file", name }));
-  newFile.value = "";
-
-  // Wait until server broadcasts new file list, then open it
-  const openFileHandler = (ev) => {
-    const msg = JSON.parse(ev.data);
-    if (msg.type === "files" && msg.files.includes(name)) {
-      ws.send(JSON.stringify({ type: "open-file", name }));
-      ws.removeEventListener("message", openFileHandler);
-    }
+  // ================= CREATE FILE =================
+  createFileBtn.onclick=()=>{
+    const name=newFile.value.trim();
+    if(!name) return;
+    ws.send(JSON.stringify({type:"create-file",name}));
+    newFile.value="";
   };
 
-  ws.addEventListener("message", openFileHandler);
-};
-
-
-/* ---------- LOCAL EDIT ---------- */
-editor.addEventListener("input", (e) => {
-  if (isApplyingRemote) return;
-
-  const newText = editor.value;
-  let start = 0;
-
-  // Find the first difference
-  while (start < localDoc.length && start < newText.length && localDoc[start] === newText[start]) {
-    start++;
-  }
-
-  if (localDoc.length < newText.length) {
-    // Insertion
-    const inserted = newText.slice(start, newText.length - (localDoc.length - start));
-    for (let i = 0; i < inserted.length; i++) {
-      const action = { op: "insert", pos: start + i, char: inserted[i] };
-      ws.send(JSON.stringify({ type: "op", ...action }));
-      if (isRecording) recordedActions.push(action);
+  // ================= EDITOR INPUT =================
+  editor.addEventListener("input",(e)=>{
+    if(isApplyingRemote) return;
+    const newText=editor.value;
+    let start=0;
+    while(start<localDoc.length && start<newText.length && localDoc[start]===newText[start]) start++;
+    if(localDoc.length<newText.length){
+      const inserted=newText.slice(start,newText.length-(localDoc.length-start));
+      for(let i=0;i<inserted.length;i++){
+        const action={op:"insert",pos:start+i,char:inserted[i]};
+        ws.send(JSON.stringify({type:"op",...action}));
+        if(isRecording) recordedActions.push(action);
+      }
+    } else if(localDoc.length>newText.length){
+      const delCount=localDoc.length-newText.length;
+      for(let i=0;i<delCount;i++){
+        const action={op:"delete",pos:start};
+        ws.send(JSON.stringify({type:"op",...action}));
+        if(isRecording) recordedActions.push(action);
+      }
     }
-  } else if (localDoc.length > newText.length) {
-    // Deletion
-    const delCount = localDoc.length - newText.length;
-    for (let i = 0; i < delCount; i++) {
-      const action = { op: "delete", pos: start };
-      ws.send(JSON.stringify({ type: "op", ...action }));
-      if (isRecording) recordedActions.push(action);
-    }
-  }
+    localDoc=newText;
+  });
 
-  localDoc = newText;
+  // ================= BACK TO FILES =================
+  backBtn.onclick=()=>{
+    app.style.display="none";
+    filePicker.style.display="flex";
+    currentFile=null;
+    editor.value="";
+    editor.disabled=true;
+    backBtn.style.display="none";
+  };
+
+  // ================= RECORDING =================
+  startBtn.onclick=()=>{ isRecording=true; recordedActions=[]; startBtn.disabled=true; stopBtn.disabled=false; replayBtn.disabled=true; };
+  stopBtn.onclick=()=>{ isRecording=false; startBtn.disabled=false; stopBtn.disabled=true; replayBtn.disabled=recordedActions.length===0; };
+  replayBtn.onclick=async()=>{
+    if(!recordedActions.length) return;
+    let cursorPos=editor.selectionStart;
+    for(const action of recordedActions){
+      if(action.op==="insert"){ localDoc = localDoc.slice(0,cursorPos)+action.char+localDoc.slice(cursorPos); cursorPos++; }
+      else if(action.op==="delete" && cursorPos>0){ localDoc=localDoc.slice(0,cursorPos-1)+localDoc.slice(cursorPos); cursorPos--; }
+      editor.value=localDoc;
+      editor.selectionStart=editor.selectionEnd=cursorPos;
+      ws.send(JSON.stringify({type:"op",op:action.op,pos:cursorPos-(action.op==="insert"?1:0),char:action.char}));
+      await new Promise(r=>setTimeout(r,50));
+    }
+  };
 });
-
-
-const backBtn = document.getElementById("backToFiles");
-
-backBtn.onclick = () => {
-  app.style.display = "none";
-  filePicker.style.display = "flex";
-  currentFile = null;
-  editor.value = "";
-  editor.disabled = true;
-  backBtn.style.display = "none";
-
-};
-const startBtn = document.getElementById("startRecording");
-const stopBtn = document.getElementById("stopRecording");
-const replayBtn = document.getElementById("replayMacro");
-
-startBtn.onclick = () => {
-  isRecording = true;
-  recordedActions = [];
-  startBtn.disabled = true;
-  stopBtn.disabled = false;
-  replayBtn.disabled = true;
-};
-
-stopBtn.onclick = () => {
-  isRecording = false;
-  startBtn.disabled = false;
-  stopBtn.disabled = true;
-  replayBtn.disabled = recordedActions.length === 0;
-};
-replayBtn.onclick = async () => {
-  if (!recordedActions.length) return;
-
-  // get the current cursor position
-  let cursorPos = editor.selectionStart;
-
-  for (let action of recordedActions) {
-    if (action.op === "insert") {
-      localDoc = localDoc.slice(0, cursorPos) + action.char + localDoc.slice(cursorPos);
-      cursorPos += 1; // move cursor forward after insert
-    } else if (action.op === "delete" && cursorPos > 0) {
-      localDoc = localDoc.slice(0, cursorPos - 1) + localDoc.slice(cursorPos);
-      cursorPos -= 1; // move cursor back after delete
-    }
-
-    editor.value = localDoc;
-    editor.selectionStart = editor.selectionEnd = cursorPos; // keep cursor in sync
-
-    // Broadcast to server
-    ws.send(JSON.stringify({ type: "op", op: action.op, pos: cursorPos - (action.op === "insert" ? 1 : 0), char: action.char }));
-
-    // Wait a short time to simulate typing
-    await new Promise(r => setTimeout(r, 50));
-  }
-};
-
-
-
 </script>
-
 </body>
 </html>
